@@ -1,3 +1,46 @@
+<?php
+
+	//TO START THE SESSION
+	session_start();
+
+	//PRE DEFINED VARIABLE
+	$username = "magdalita";
+	$password = "ahmad123";
+	$name = "Ahmad Magdalita";
+	$address = "Malibago Torrijos Marinduque";
+
+
+	$url_add = "https://" . $_SERVER ['HTTP_HOST'] .  $_SERVER['PHP_SELF'];
+
+	// TO TEST IF THE BUTTON IS CLICKED
+	if(isset($_REQUEST['submit_button']) === true){
+		//TO TEST IF USERNAME IS AMTCHED TO THE PRE DEFINE USERNAME
+		if(($_REQUEST['username']) !=  $username){
+			header("Location:" . $url_add."?username_not_exist");
+		}
+		else if(($_REQUEST['username']) ==  $username && $_REQUEST['password'] != $password)
+		{
+			header("Location:" . $url_add."?incorect_pass");
+		}else if(($_REQUEST['username']) ==  $username && $_REQUEST['password'] == $password)
+		{
+			header("Location:" . $url_add."?login_successful");
+		}
+		$_SESSION['ses_username'] = $username;
+		$_SESSION['ses_password'] = $password;
+		$_SESSION['ses_name'] = $name;
+		$_SESSION['ses_address'] = $address;
+
+
+						
+	}
+?>
+
+
+
+
+
+
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -24,12 +67,41 @@
 		      	</div>
 		      	<h3 class="text-center mb-4">MyTumblr Login</h3>
 						
-						<form action="#" class="login-form">
+						<form  method="$_POST"  action="#" class="login-form">
 		      		<div class="form-group">
-		      			<input type="text" class="form-control rounded-left" placeholder="Username" required>
+
+					<?php
+
+					if(isset($_REQUEST['username_not_exist'])=== true)
+					{
+						echo "<div class='alert alert-danger' role='alert'> Username does not exist </div>";
+					}else if(isset($_REQUEST['incorect_pass']) === true){
+						echo"<div class='alert alert-danger' role='alert'> Incorrect Password </div>";
+					}else if(isset($_REQUEST['login_successful']) === true){
+						echo"<div class='alert alert-danger' role='alert'> Redirecting to next page... </div>";
+						header("Refresh: 5; url=account.php");
+					}else if(isset($_REQUEST['logout']) === true){
+						echo"<div class='alert alert-danger' role='alert'> Thank You </div>";
+					
+					}else if(isset($_REQUEST['logfirst']) === true){
+						echo"<div class='alert alert-danger' role='alert'> Log In First </div>";
+					
+					}else if(isset($_SESSION['ses_username']) === true){
+						echo"<div class='alert alert-danger' role='alert'> You are still Logged in. <a href= 'account.php'> Clicked here.</a> </div>";
+					}
+
+					?>
+
+
+
+
+
+		      			<input type="text" class="form-control rounded-left" placeholder="Username" name="username" required>
 		      		</div>
 	            <div class="form-group d-flex">
-	              <input type="password" class="form-control rounded-left" placeholder="Password" required>
+					
+
+	              <input type="password" class="form-control rounded-left" placeholder="Password" name="password" required>
 	            </div>
 	            <div class="form-group d-md-flex">
 	            	<div class="w-50">
@@ -43,7 +115,7 @@
 								</div>
 	            </div>
 	            <div class="form-group">
-	            	<button type="submit" class="btn btn-primary rounded submit p-3 px-5">Get Started</button>
+	            	<button type="submit" class="btn btn-primary rounded submit p-3 px-5"  name="submit_button">Get Started</button>
 	            </div>
 	          </form>
 	        </div>
